@@ -55,7 +55,7 @@ app.get("/process-image", async (req, res) => {
           background: { r: 255, g: 255, b: 255, alpha: 0 }, // Transparent padding
         })
         .toBuffer();
-     const newMetaData = await sharp(buffer).metadata();
+     const newMetaData = await sharp(imageBuffer).metadata();
      console.log("Original dimension" + metadata.width + " X " + metadata.height); 
      console.log("new dimension" + newMetaData.width + " X " + newMetaData.height); 
     }

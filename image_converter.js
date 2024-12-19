@@ -70,9 +70,9 @@ app.get("/process-image", async (req, res) => {
 
 // Endpoint to display images side by side
 app.get("/compare-images", async (req, res) => {
-  const { imageUrl, processEndpoint, makeSquare } = req.query;
+  const { imageUrl, makeSquare } = req.query;
 
-  if (!imageUrl || !processEndpoint) {
+  if (!imageUrl) {
     return res
       .status(400)
       .send(
@@ -86,7 +86,7 @@ app.get("/compare-images", async (req, res) => {
     const base64Image = await base64Response.text();
 
     // Construct the URL for the processed image
-    const processedImageUrl = `${processEndpoint}?imageUrl=${encodeURIComponent(
+    const processedImageUrl = `https://base64toimageconverter.onrender.com/process-image?imageUrl=${encodeURIComponent(
       imageUrl
     )}${makeSquare === "true" ? "&makeSquare=true" : ""}`;
 

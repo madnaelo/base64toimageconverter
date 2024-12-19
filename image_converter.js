@@ -68,6 +68,80 @@ app.get("/process-image", async (req, res) => {
   }
 });
 
+// Endpoint to display images side by side
+app.get("/compare-images", async (req, res) => {
+  const { imageUrl, processEndpoint, makeSquare } = req.query;
+
+  if (!imageUrl || !processEndpoint) {
+    return res
+      .status(400)
+      .send(
+        "Parameters 'imageUrl' (Base64 image URL) and 'processEndpoint' are required."
+      );
+  }
+
+  try {
+    // Fetch Base64 image from the given URL
+    const base64Response = await fetch(imageUrl);
+    const base64Image = await base64Response.text();
+
+    // Construct the URL for the processed image
+    const processedImageUrl = `${processEndpoint}?imageUrl=${encodeURIComponent(
+      imageUrl
+    )}${makeSquare === "true" ? "&makeSquare=true" : ""}`;
+
+    // Generate the HTML
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Compare Images</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+          }
+          .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+          }
+          .image-container img {
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-width: 300px;
+            max-height: 300px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Image Comparison</h1>
+        <div class="image-container">
+          <div>
+            <h2>Original Image</h2>
+            <img src="data:image/jpeg;base64,${base64Image}" alt="Original Image">
+          </div>
+          <div>
+            <h2>Processed Image</h2>
+            <img src="${processedImageUrl}" alt="Processed Image">
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Send the HTML response
+    res.setHeader("Content-Type", "text/html");
+    res.send(html);
+  } catch (error) {
+    console.error("Error fetching or processing images:", error);
+    res.status(500).send("Error fetching or processing images.");
+  }
+});
+
 // Start the server
 const PORT = 32768;
 app.listen(PORT, () => {

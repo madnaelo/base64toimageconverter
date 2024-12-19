@@ -21,12 +21,12 @@ const getMimeType = (buffer) => {
 };
 
 app.get("/process-image", async (req, res) => {
-  const { imageUrl, makeSquare } = req.query;
+  const { dhaUniqueId, makeSquare } = req.query;
 
-  if (!imageUrl) {
-    return res.status(400).send("Image URL is required");
+  if (!dhaUniqueId) {
+    return res.status(400).send("dhaUniqueId is required");
   }
-
+  const imageUrl = `https://services.dha.gov.ae/sheryan/RestService/rest/retrieve/profileImage?key=SHARED_KEY&dhaUniqueId=${dhaUniqueId}`;
   try {
     // Fetch the Base64 string from the provided URL
     console.log(imageUrl);
@@ -70,24 +70,25 @@ app.get("/process-image", async (req, res) => {
 
 // Endpoint to display images side by side
 app.get("/compare-images", async (req, res) => {
-  const { imageUrl, makeSquare } = req.query;
+  const { dhaUniqueId, makeSquare } = req.query;
 
-  if (!imageUrl) {
+  if (!dhaUniqueId) {
     return res
       .status(400)
       .send(
-        "Parameters 'imageUrl' (Base64 image URL) and 'processEndpoint' are required."
+        "Parameters 'dhaUniqueId' required."
       );
   }
 
+  const imageUrl = `https://services.dha.gov.ae/sheryan/RestService/rest/retrieve/profileImage?key=SHARED_KEY&dhaUniqueId=${dhaUniqueId}`;
   try {
     // Fetch Base64 image from the given URL
     const base64Response = await fetch(imageUrl);
     const base64Image = await base64Response.text();
 
     // Construct the URL for the processed image
-    const processedImageUrl = `https://base64toimageconverter.onrender.com/process-image?imageUrl=${encodeURIComponent(
-      imageUrl
+    const processedImageUrl = `https://base64toimageconverter.onrender.com/process-image?dhaUniqueId=${encodeURIComponent(
+      dhaUniqueId
     )}${makeSquare === "true" ? "&makeSquare=true" : ""}`;
 
     // Generate the HTML

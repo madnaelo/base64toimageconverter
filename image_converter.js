@@ -33,6 +33,8 @@ app.get("/process-image", async (req, res) => {
     const response = await fetch(imageUrl);
     const base64Image = await response.text();
 
+    console.log(base64Image);
+    
     // Decode Base64 string to a binary buffer
     const buffer = Buffer.from(base64Image, "base64");
 

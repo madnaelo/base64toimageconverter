@@ -52,7 +52,7 @@ app.get("/process-image", async (req, res) => {
       imageBuffer = await sharp(buffer)
         .resize(maxDim, maxDim, {
           fit: "contain",
-          background: { r: 255, g: 255, b: 255, a: 1 }, // Transparent padding
+          background: { r: 240, g: 240, b: 240, a: 0 }, // Transparent padding
         })
         .toBuffer();
      const newMetaData = await sharp(imageBuffer).metadata();

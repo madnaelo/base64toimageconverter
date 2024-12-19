@@ -29,6 +29,7 @@ app.get("/process-image", async (req, res) => {
 
   try {
     // Fetch the Base64 string from the provided URL
+    console.log(imageUrl);
     const response = await fetch(imageUrl);
     const base64Image = await response.text();
 
